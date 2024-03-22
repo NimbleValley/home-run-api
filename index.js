@@ -176,7 +176,7 @@ app.get("/commit", function (req, res) {
 
 
 function gitPush() {
-    var yourscript = exec('gitpush.sh',
+    var gitScript = exec('gitpush.sh',
         (error, stdout, stderr) => {
             console.log(stdout);
             console.log(stderr);

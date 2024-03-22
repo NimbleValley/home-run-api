@@ -166,8 +166,17 @@ app.get("/erase", function (req, res) {
 
 
 
+// Force git commit
+app.get("/commit", function (req, res) {
+    gitPush();
+
+    res.end(JSON.stringify({ "recieved": "All good" }));
+});
+
+
+
 function gitPush() {
-    var yourscript = exec('./upload/gitpush.sh',
+    var yourscript = exec('gitpush.sh',
         (error, stdout, stderr) => {
             console.log(stdout);
             console.log(stderr);

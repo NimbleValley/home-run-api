@@ -1,0 +1,203 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-color: var(--background);
+}
+
+@font-face {
+    font-family: Futura;
+    src: url("fonts/Futura\ Bold.otf") format("opentype");
+}
+
+:root {
+    --text: #030202;
+    --background: #f2e9e3;
+    --primary: #b88465;
+    --secondary: #ec9a6a;
+    --accent: #a14534;
+}
+
+#header {
+    top: 0;
+    left: 0;
+    position: fixed;
+    height: fit-content;
+    background-color: var(--secondary);
+    width: 100vw;
+    z-index: 100;
+}
+
+#header-container {
+    width: 100vw;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+}
+
+#home-page-link {
+    position: relative;
+    font-size: 2.5vw;
+    color: var(--text);
+    font-weight: normal;
+    z-index: 10;
+    padding: 1vh;
+    height: fit-content;
+    font-weight: bold;
+    font-family: Futura;
+    letter-spacing: 0vh;
+    transition: letter-spacing 0.15s;
+}
+
+#home-page-link:hover {
+    cursor: pointer;
+    letter-spacing: 0.15vw;
+}
+
+#home-page-link:after {
+    content: "";
+    background-color: var(--primary);
+    position: absolute;
+    width: calc(100% + 1vh);
+    height: 0px;
+    left: -1vh;
+    top: -1vh;
+    transition: height 0.5s;
+    z-index: -1;
+}
+
+#home-page-link:hover:after {
+    height: calc(100% + 1vh);
+}
+
+#page-button-container {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+}
+
+.page-button {
+    position: relative;
+    font-size: 2.25vw;
+    color: var(--text);
+    font-weight: normal;
+    z-index: 10;
+    padding: 1vh;
+    height: 100%;
+    margin-right: 2vh;
+    transition: color 0.15s;
+}
+
+.page-button:hover {
+    cursor: pointer;
+    color: var(--background);
+}
+
+.page-button::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 7.5%;
+    background-color: var(--accent);
+    left: 0;
+    bottom: 0;
+    transition: height 0.15s cubic-bezier(0.75, 0.01, 0.005, 1);
+    z-index: -1;
+}
+
+.page-button:hover::after {
+    height: 100%;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+}
+
+h1 {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 18vh;
+    width: fit-content;
+    font-size: 2.5vw;
+    transition: color 0.15s;
+    z-index: 10;
+}
+
+h1:hover {
+    cursor: pointer;
+    color: var(--background);
+}
+
+h1::after {
+    content: "";
+    background-color: var(--text);
+    position: absolute;
+    width: 100%;
+    height: 5%;
+    bottom: 0;
+    left: 0;
+    transition: height 0.15s;
+    z-index: -1;
+}
+
+h1:hover::after {
+    height: 100%;
+}
+
+p {
+    white-space: pre-line;
+    font-size: 1.75vw;
+    margin: 5vh;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    position: relative;
+    z-index: 10;
+    transition: color 0.15s;
+    font-size: 2.95vw;
+}
+
+a:hover {
+    cursor: pointer;
+    color: var(--background);
+}
+
+a::after {
+    content: "";
+    background-color: var(--accent);
+    position: absolute;
+    width: 100%;
+    height: 7.5%;
+    bottom: -5%;
+    left: 0;
+    transition: height 0.15s, bottom 0.15s;
+    z-index: -1;
+}
+
+a:hover::after {
+    height: 105%;
+}
+
+.horizontal-container {
+    display: flex;
+    justify-content: center;
+}
+
+select {
+    font-size: 3vw;
+    background-color: transparent;
+    border: 0.5vh solid var(--accent);
+    transition: colro 0.15s, background-color 0.15s;
+    color: var(--text);
+}
+
+select:hover {
+    cursor: pointer;
+    background-color: var(--accent);
+    color: var(--background);
+}

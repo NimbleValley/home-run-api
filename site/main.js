@@ -189,7 +189,7 @@ function getHit() {
 
   ball.position.y = initialHeight * SCALE;
 
-  var landingGeometry = new THREE.SphereGeometry(0.5, 32, 16, 100);
+  var landingGeometry = new THREE.SphereGeometry(0.25, 32, 16, 100);
   const landing = new THREE.Mesh(landingGeometry, material);
 
   landing.name = "landing";
@@ -202,28 +202,30 @@ function getHit() {
   var maxHeight = (-16.085 * Math.pow(total_time, 2)) + (launch_speed_fts * Math.sin(launch_angle) * (total_time / 2)) + (initialHeight * 2);
   console.log("Maximum Height: " + maxHeight);
 
-  const bezier = new THREE.QuadraticBezierCurve3(
-    new THREE.Vector3(0, 0, 0),
-    new THREE.Vector3(landing.position.x / 2, maxHeight * SCALE * -1 * DISTANCE_SCALE, landing.position.z / 2),
-    new THREE.Vector3(landing.position.x, landing.position.y, landing.position.z)
-  );
+  for (let i = -0.1; i <= 0.1; i += 0.01) {
+    let bezier = new THREE.QuadraticBezierCurve3(
+      new THREE.Vector3(i, 0, 0),
+      new THREE.Vector3(landing.position.x / 2 + i, maxHeight * SCALE * -1 * DISTANCE_SCALE, landing.position.z / 2),
+      new THREE.Vector3(landing.position.x + i, landing.position.y, landing.position.z)
+    );
 
-  /*curve.points.push(new THREE.Vector3(landing.position.x / 2, 100 * SCALE, landing.position.z / 2));
-  curve.points.push(new THREE.Vector3(landing.position.x, landing.position.y, landing.position.z));*/
+    /*curve.points.push(new THREE.Vector3(landing.position.x / 2, 100 * SCALE, landing.position.z / 2));
+    curve.points.push(new THREE.Vector3(landing.position.x, landing.position.y, landing.position.z));*/
 
-  const points = bezier.getPoints(50);
-  const curveGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    let points = bezier.getPoints(50);
+    let curveGeometry = new THREE.BufferGeometry().setFromPoints(points);
 
-  const curveMaterial = new THREE.LineBasicMaterial({
-    color: 0xff0000,
-    linewidth: 100,
-    linecap: 'round', //ignored by WebGLRenderer
-    linejoin: 'round' //ignored by WebGLRenderer
-  });
+    let curveMaterial = new THREE.LineBasicMaterial({
+      color: 0xff0000,
+      linewidth: 100,
+      linecap: 'round', //ignored by WebGLRenderer
+      linejoin: 'round' //ignored by WebGLRenderer
+    });
 
-  const curveObject = new THREE.Line(curveGeometry, curveMaterial);
-  curveObject.name = "curve";
-  scene.add(curveObject);
+    let curveObject = new THREE.Line(curveGeometry, curveMaterial);
+    curveObject.name = "curve" + i;
+    scene.add(curveObject);
+  }
 }
 
 function animate() {
@@ -245,6 +247,8 @@ function swapStadium(manual) {
   if (manual) {
     abb = document.getElementById("stadium-select").value;
   }
+
+  document.getElementById("stadium-select").value = abb;
 
   var selectedObject = scene.getObjectByName("stadium-mlb");
   scene.remove(selectedObject);
@@ -271,16 +275,13 @@ document.getElementById("new-hit").addEventListener("click", function () {
 function statcast_search() {
 
   //Remove old curve & Landing
-  scene.remove(scene.getObjectByName("curve"));
+  for (let i = -0.1; i <= 0.1; i += 0.01) {
+    scene.remove(scene.getObjectByName("curve" + i));
+  }
   scene.remove(scene.getObjectByName("landing"));
 
   searchParameters.style.display = "none";
   console.log("Fetching data...");
-
-  let selectedStadium = "";
-  if (document.getElementById("stadium-select-search").value != "void") {
-    selectedStadium = stadiumIds[parseInt(document.getElementById("stadium-select-search").value)];
-  }
 
   year = parseInt(document.getElementById("year-select-search").value);
 
@@ -288,13 +289,9 @@ function statcast_search() {
   if (playerSelectSearch.value != "void") {
     playerId = playerRows[parseInt(playerSelectSearch.value)][10];
   } else {
-    //alert("Currently you must put a player's name in, will be updated in the future.");
+    alert("Currently you must put a player's name in, will be updated in the future.");
     console.error("It's not recommended to leave player slot blank, it slows search down :(");
   }
-
-  let outcomeSelect = document.getElementById("outcome-select-search").value;
-
-  //console.log("Requested URL: " + `https://baseballsavant.mlb.com/statcast_search/csv?all=true&hfPT=&hfAB=single%7Cdouble%7Ctriple%7Chome%5C.%5C.run%7Cfield%5C.%5C.out%7C&hfGT=R%7C&hfPR=&hfZ=&hfStadium=${stadiumIds[whichStadium]}&hfBBL=7%7C8%7C9%7C&hfNewZones=&hfPull=&hfC=&hfSea=${year}%7C&hfSit=&player_type=batter&hfOuts=&hfOpponent=&pitcher_throws=&batter_stands=&hfSA=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=${playerTeam}%7C&home_road=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=fly%5C.%5C.ball%7Cline%5C.%5C.drive%7C&hfFlag=&metric_1=&group_by=name-date&min_pitches=0&min_results=0&min_pas=0&sort_col=pitches&player_event_sort=api_p_release_speed&sort_order=desc&min_abs=0&type=detals#results`);
 
   dataCells = [];
 
@@ -303,7 +300,7 @@ function statcast_search() {
   title.innerText = "Search Results";
   searchResults.appendChild(title);
 
-  parseCSV("./data/2023.csv");
+  parseCSV(`./data/${year}.csv`);
 }
 
 //parseCSV("./data/2023.csv");
@@ -315,6 +312,12 @@ function parseCSV(url) {
   Papa.parse(url, {
     download: true,
     complete: function (results) {
+      let outcomeValue = document.getElementById("outcome-select-search").value;
+      let selectedStadium = "";
+      if (document.getElementById("stadium-select-search").value != "void") {
+        selectedStadium = stadiumIds[parseInt(document.getElementById("stadium-select-search").value)];
+      }
+
       data = results;
 
       //console.log(data.data[1]);
@@ -322,6 +325,14 @@ function parseCSV(url) {
       let dataCount = 0;
 
       for (var i = 1; i < data.data.length; i++) {
+        if ((outcomeValue != "field_out" && data.data[i][8] == "field_out") || (outcomeValue == "field_out" && data.data[i][8] != "field_out")) {
+          continue;
+        }
+
+        if (data.data[i][19] != document.getElementById("stadium-select-search").value && document.getElementById("stadium-select-search").value != "void") {
+          continue;
+        }
+
         var temp = document.createElement("div");
         temp.className = "result-cell";
         var hitResult = "Out";
@@ -347,6 +358,8 @@ function parseCSV(url) {
           searchResults.style.display = "none";
           selectIndex(data, this.id);
         }
+
+        // Filter
         if (data.data[i][6] == playerId || playerId == -1) {
           console.log("Yes")
           dataCount++;

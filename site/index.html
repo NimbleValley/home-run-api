@@ -1,181 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MLB Hit Tracker</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLB Distance Compare</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
-
-  <div id="control-container">
-    <select name="Stadium" id="stadium-select">
-      <option value="MIL">Am Family Field</option>
-      <option value="LAA">Angel Stadium</option>
-      <option value="STL">Busch Stadium III</option>
-      <option value="BAL">Camden Yards</option>
-      <option value="AZ" selected>Chase Field</option>
-      <option value="NYM">Citi Field</option>
-      <option value="PHI">Citizens Bank Park</option>
-      <option value="DET">Comerica Field</option>
-      <option value="COL">Coors Field</option>
-      <option value="LAD">Dodger Stadium</option>
-      <option value="BOS">Fenway Park</option>
-      <option value="TEX">Globe Life Field</option>
-      <option value="CWS">Gntd. Rate Field</option>
-      <option value="CIN">Great American Blpk</option>
-      <option value="KC">Kauffman Stadium</option>
-      <option value="MIA">Load Depot Field</option>
-      <option value="HOU">Minute Maid Park</option>
-      <option value="WSH">Nationals Field</option>
-      <option value="OAK">Oakland</option>
-      <option value="SF">Oracle Park</option>
-      <option value="SD">Petco Park</option>
-      <option value="PIT">PNC Park</option>
-      <option value="CLE">Progressive Field</option>
-      <option value="TOR">Rodgers Centre</option>
-      <option value="MIN">Target Field</option>
-      <option value="TB">Tropicana Field</option>
-      <option value="ATL">Truist Field</option>
-      <option value="SEA">T-Mobile Park</option>
-      <option value="CHC">Wrigley Field</option>
-      <option value="NYY">Yankee Stadium II</option>
-    </select>
-    <div id="new-hit">New Hit</div>
-  </div>
-
-  <div id="search-parameters">
-    <h1>Filters</h1>
-    <div id="fields-container">
-      <div class="field-wrapper">
-        <label for="stadium-select-search">Stadium:</label>
-        <select name="Stadium" id="stadium-select-search" class="select-parameter">
-          <option value="void">Any</option>
-          <option value="0">Chase Field</option>
-          <option value="1">Truist Field</option>
-          <option value="2">Camden Yards</option>
-          <option value="3">Fenway Park</option>
-          <option value="4">Wrigley Field</option>
-          <option value="5">Great American Blpk</option>
-          <option value="6">Progressive Field</option>
-          <option value="7">Coors Field</option>
-          <option value="8">Gntd. Rate Field</option>
-          <option value="9">Comerica Field</option>
-          <option value="10">Minute Maid Park</option>
-          <option value="11">Kauffman Stadium</option>
-          <option value="12">Angel Stadium</option>
-          <option value="13">Dodger Stadium</option>
-          <option value="14">Load Depot Field</option>
-          <option value="15">Am Family Field</option>
-          <option value="16">Target Field</option>
-          <option value="17">Citi Field</option>
-          <option value="18">Yankee Stadium II</option>
-          <option value="19">Oakland</option>
-          <option value="20">Citizens Bank Park</option>
-          <option value="21">PNC Park</option>
-          <option value="22">Petco Park</option>
-          <option value="23">T-Mobile Park</option>
-          <option value="24">Oracle Park</option>
-          <option value="25">Busch Stadium III</option>
-          <option value="26">Tropicana Field</option>
-          <option value="27">Globe Life Field</option>
-          <option value="28">Rodgers Centre</option>
-          <option value="29">Nationals Field</option>
-        </select>
-      </div>
-
-      <div class="field-wrapper">
-        <label for="year-select-search">Year:</label>
-        <select name="Year" id="year-select-search" class="select-parameter">
-          <option value="2023">2023</option>
-          <option value="2022">2022</option>
-          <option value="2021">2021</option>
-          <option value="2020">2020</option>
-          <option value="2019">2019</option>
-          <option value="2018">2018</option>
-          <option value="2017">2017</option>
-          <option value="2016">2016</option>
-          <option value="2015">2015</option>
-          <option value="2014">2014</option>
-          <option value="2013">2013</option>
-          <option value="2012">2012</option>
-          <option value="2011">2011</option>
-        </select>
-      </div>
-
-      <!--
-      <div class="field-wrapper">
-        <label for="player-select-search-label">Player:</label>
-        <input list="player-select-search" name="Player" id="player-select-search-label" class="select-parameter">
-        <datalist name="Player" id="player-select-search" class="select-parameter">
-          <option value="-1">Any</option>
-        </datalist>
-      </div>-->
-
-      <div class="field-wrapper">
-        <label for="player-select-search">Player:</label>
-        <input type="text" id="player-text-search" class="select-parameter">
-        <select list="player-select-search" name="Player" id="player-select-search" class="select-parameter">
-          <option value="void">Any</option>
-        </select>
-      </div>
-
-      <div class="field-wrapper">
-        <label for="outcome-select-search">Outcome:</label>
-        <select name="Outcome" id="outcome-select-search" class="select-parameter">
-          <option value="single%7Cdouble%7Ctriple%7Chome%5C.%5C.run%7Cfield%5C.%5C.out%7C">Any</option>
-          <option value="single%7Cdouble%7Ctriple%7Chome%5C.%5C.run%7C">Hit</option>
-          <option value="field%5C.%5C.out%7C">Out</option>
-        </select>
-      </div>
-
-      <!--<div class="field-wrapper">
-        <label for="sort-select-search">Sort By:</label>
-        <select name="Outcome" id="sort-select-search" class="select-parameter">
-          <option value="single%7Cdouble%7Ctriple%7Chome%5C.%5C.run%7Cfield%5C.%5C.out%7C">Any</option>
-          <option value="single%7Cdouble%7Ctriple%7Chome%5C.%5C.run%7C">Hit</option>
-          <option value="field%5C.%5C.out%7C">Out</option>
-        </select>
-      </div>-->
-
-      <!--<div class="field-wrapper">
-        <label for="month-select-search">Month:</label>
-        <select name="Month" id="month-select-search" class="select-parameter">
-          <option value="single%7Cdouble%7Ctriple%7Chome%5C.%5C.run%7C">Hit</option>
-          <option value="field%5C.%5C.out%7C">Out</option>
-        </select>
-      </div> -->
-
+    <div id="header">
+        <div id="header-container">
+            <button id="home-page-link" onclick="window.location.href=''">MLB Distance Compare</button>
+            <div id="page-button-container">
+                <button id="visualizer-button" class="page-button" onclick="window.open('https://twitter.com/distancetracker')">Twitter</button>
+                <button id="visualizer-button" class="page-button" onclick="window.open('https://github.com/NimbleValley/home-run-api')">Github</button>
+                <button id="visualizer-button" class="page-button" onclick="window.location.href='visualize.html'">Home Run Visualizer</button>
+            </div>
+        </div>
     </div>
-    <div class="field-wrapper">
-      <div id="search-button">Search</div>
-      <div id="cancel-button">Cancel</div>
-    </div>
-  </div>
 
-  <div id="upload-help">
-    <h1>Upload the downloaded CSV below:</h1>
-    <form>
-      <input type="file" id="csv-file" name="filename">
-    </form>
-  </div>
+    <h1>MLB Hit Distance Compare & Visualizer</h1>
+    <p> The MLB Distance Tracker is a tool that shows where a ball landed in a real MLB game, and can be used to show
+        where it would have landed at a different stadium. Using Statcast data and MLB stadium assets, the distance
+        tracker is a useful tool for any baseball fan.
+    </p>
+    <!--
+    <h1 style="margin-top: 1vh; margin-left: 2vw; margin-bottom: 1vh;">Controls:</h1>
+    <p style="margin: 3vw !important; margin-top: 3vh !important; margin-bottom: 3vh !important;">W: Forward
+        A: Left
+        S: Backward
+        D: Right
+        Q: Down
+        W: Up
+        Space Bar: Faster
+        Alt/Left Click: Slower
+        Right Click: Rotate
+        Middle Mouse: Zoom
+    </p>-->
+    <h1 style="margin-top: 10vh; margin-left: 2vw; margin-bottom: 1vh;">Instructions:</h1>
+    <p style="margin: 3vw !important; margin-top: 3vh !important;">  To load a new hit, click the "New Hit" button. On the next screen, type in part of the player's name who hit the ball, and select from the pool of players in the select on the right. <strong> If you do not select a player, no data will load. This will be improved later.</strong> After selecting stadium (optional), outcome (optional), and year, wait for the data to load. You can select from a list of past hits and outs. Click an outcome and wait a moment for the stadium to load.  <strong>If no data loads, that means no search results matched your parameters.</strong> You should now see the hit with the stadium it took place in. <strong>Please note, stadium effects like elevation are not accounted for at the moment. An updated version is in the works.</strong>
+        
+        Switching stadiums is powerful because it lets you see if the ball might have been a homerun in other ballparks. When switching stadiums, please wait 3-10 seconds for the large stadium files to load. <strong>Please note, Detroit's Comerica Park & Toronto's Rodger's Centre do not have updated dimensions for the 2024 season. This will be updated eventually.</strong> Historic stadiums like Crosley Field and Polo Grounds will likely be added in the future, however, they likely will not be as detailed as previous stadiums. Also, it would be cool to add in old dimensions of existing stadiums, like the deep Tal's Hill at Minute Maid Park.
+        </p>
+    <h1 style="margin-top: 5vh; margin-bottom: 15vh; width: 75vw;">REMEMBER: The data shown on this app is only as accurate as the Statcast and MLB data.</h1>
 
-  <div id="loading-message">
-    <h1>Loading Data...</h1>
-  </div>
-
-  <div id="search-results">
-    <h1>Search Results</h1>
-  </div>
-
-  <canvas id="bg"></canvas>
-
-  <script src="papaparse.min.js"></script>
-  <script type="module" src="main.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Run Finder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="header">
+        <div id="header-container">
+            <button id="home-page-link" onclick="window.location.href='index.html'">MLB Distance Compare</button>
+            <div id="page-button-container">
+                <button id="visualizer-button" class="page-button"
+                    onclick="window.open('https://twitter.com/distancetracker')">Twitter</button>
+                <button id="visualizer-button" class="page-button"
+                    onclick="window.open('https://github.com/NimbleValley/home-run-api')">Github</button>
+                <button id="visualizer-button" class="page-button" onclick="window.location.href='visualize.html'">HR
+                    Visualizer</button>
+                <button id="visualizer-button" class="page-button" onclick="window.location.href='finder.html'">HR
+                    Finder</button>
+            </div>
+        </div>
+    </div>
+    <h1>MLB Home Run Finder</h1>
+
+    <div id="home-run-finder-container">
+        <div id="home-run-finder-filter-container">
+            <h2>Home Run Filters</h2>
+
+            <!--<div>
+                <label for="year-select">Year:</label>
+                <select name="year-select" id="year-select">
+                    <option value="-1">Any</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                </select>
+            </div>-->
+
+            <div>
+                <label for="away-team-select">Away Team:</label>
+                <select name="away-team-select" id="away-team-select">
+                    <option value="31">Any</option>
+                    <option value="LAA">Angels</option>
+                    <option value="HOU">Astros</option>
+                    <option value="OAK">Athletics</option>
+                    <option value="TOR">Blue Jays</option>
+                    <option value="ATL">Braves</option>
+                    <option value="MIL">Brewers</option>
+                    <option value="STL">Cardinals</option>
+                    <option value="CHC">Cubs</option>
+                    <option value="AZ">D Backs</option>
+                    <option value="LAD">Dodgers</option>
+                    <option value="SF">Giants</option>
+                    <option value="CLE">Guardians</option>
+                    <option value="SEA">Mariners</option>
+                    <option value="MIA">Marlins</option>
+                    <option value="NYM">Mets</option>
+                    <option value="WSH">Nationals</option>
+                    <option value="BAL">Orioles</option>
+                    <option value="SD">Padres</option>
+                    <option value="PHI">Phillies</option>
+                    <option value="PIT">Pirates</option>
+                    <option value="TEX">Rangers</option>
+                    <option value="TB">Rays</option>
+                    <option value="BOS">Red Sox</option>
+                    <option value="CIN">Reds</option>
+                    <option value="COL">Rockies</option>
+                    <option value="KC">Royals</option>
+                    <option value="DET">Tigers</option>
+                    <option value="MIN">Twins</option>
+                    <option value="CWS">White Sox</option>
+                    <option value="NYY">Yankees</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="home-team-select">Home Team:</label>
+                <select name="home-team-select" id="home-team-select">
+                    <option value="31">Any</option>
+                    <option value="LAA">Angels</option>
+                    <option value="HOU">Astros</option>
+                    <option value="OAK">Athletics</option>
+                    <option value="TOR">Blue Jays</option>
+                    <option value="ATL">Braves</option>
+                    <option value="MIL">Brewers</option>
+                    <option value="STL">Cardinals</option>
+                    <option value="CHC">Cubs</option>
+                    <option value="AZ">D Backs</option>
+                    <option value="LAD">Dodgers</option>
+                    <option value="SF">Giants</option>
+                    <option value="CLE">Guardians</option>
+                    <option value="SEA">Mariners</option>
+                    <option value="MIA">Marlins</option>
+                    <option value="NYM">Mets</option>
+                    <option value="WSH">Nationals</option>
+                    <option value="BAL">Orioles</option>
+                    <option value="SD">Padres</option>
+                    <option value="PHI">Phillies</option>
+                    <option value="PIT">Pirates</option>
+                    <option value="TEX">Rangers</option>
+                    <option value="TB">Rays</option>
+                    <option value="BOS">Red Sox</option>
+                    <option value="CIN">Reds</option>
+                    <option value="COL">Rockies</option>
+                    <option value="KC">Royals</option>
+                    <option value="DET">Tigers</option>
+                    <option value="MIN">Twins</option>
+                    <option value="CWS">White Sox</option>
+                    <option value="NYY">Yankees</option>
+                </select>
+            </div>
+
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <label for="min-distance-input">Distance:</label>
+                <input type="text" id="min-distance-input" name="min-distance-input" value="300">
+                <p style="margin: 0vw;">'</p>
+                <p style="margin: 0vw 1vw 0vw 1vw;">-</p>
+                <input type="text" id="max-distance-input" name="max-distance-input" value="550">
+                <p style="margin: 0vw;">'</p>
+            </div>
+
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <label for="start-date-input">Start Date:</label>
+                <input type="date" id="start-date-input" name="start-date-input" style="width: fit-content;">
+            </div>
+
+            <div style="width: 100%; display: flex; justify-content: center;">
+                <label for="end-date-input">End Date:</label>
+                <input type="date" id="end-date-input" name="end-date-input" style="width: fit-content;">
+            </div>
+
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1vh;">
+                <label for="player-name-text-input">Player search: (then use select)</label>
+                <input type="text" id="player-name-text-input" name="player-name-text-input" style="width: 80%;"
+                    placeholder="Search for players here...">
+            </div>
+
+            <div>
+                <label for="player-select">Player:</label>
+                <select name="player-select" id="player-select" style="width: 20vw;">
+                    <option value="-1">Loading...</option>
+                </select>
+            </div>
+
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1vh;">
+                <button id="home-run-search-button">Search</button>
+            </div>
+
+        </div>
+        <div id="home-run-finder-output-container">
+        </div>
+    </div>
+</body>
+<script src="papaparse.min.js"></script>
+<script src="finder.js"></script>
+
+</html>

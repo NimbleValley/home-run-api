@@ -86,7 +86,7 @@ html {
     padding: 1vh;
     height: 100%;
     margin-right: 2vh;
-    transition: color 0.15s;
+    transition: color 0.4s;
 }
 
 .page-button:hover {
@@ -102,7 +102,7 @@ html {
     background-color: var(--accent);
     left: 0;
     bottom: 0;
-    transition: height 0.15s cubic-bezier(0.75, 0.01, 0.005, 1);
+    transition: height 0.2s cubic-bezier(0.75, 0.01, 0.005, 1);
     z-index: -1;
 }
 
@@ -143,6 +143,37 @@ h1::after {
     z-index: -1;
 }
 
+h2 {
+    position: relative;
+    margin: 0;
+    width: fit-content;
+    font-size: 2.25vw;
+    transition: color 0.15s;
+    z-index: 10;
+    color: var(--text);
+}
+
+h2:hover {
+    cursor: pointer;
+    color: var(--background);
+}
+
+h2::after {
+    content: "";
+    background-color: var(--accent);
+    position: absolute;
+    width: 100%;
+    height: 5%;
+    bottom: 0;
+    left: 0;
+    transition: height 0.15s;
+    z-index: -1;
+}
+
+h2:hover::after {
+    height: 100%;
+}
+
 h1:hover::after {
     height: 100%;
 }
@@ -151,6 +182,8 @@ p {
     white-space: pre-line;
     font-size: 1.75vw;
     margin: 5vh;
+    display: block;
+    width: fit-content;
 }
 
 a {
@@ -189,15 +222,118 @@ a:hover::after {
 }
 
 select {
-    font-size: 3vw;
+    font-size: 1.75vw;
     background-color: transparent;
-    border: 0.5vh solid var(--accent);
+    border: 0.5vh solid var(--secondary);
     transition: colro 0.15s, background-color 0.15s;
     color: var(--text);
+    padding: 0.5vh;
 }
 
 select:hover {
     cursor: pointer;
-    background-color: var(--accent);
+    background-color: var(--secondary);
+    color: var(--text);
+}
+
+option {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+label {
+    font-size: 2vw;
+    margin-right: 1vw;
+}
+
+input {
+    width: 5vw;
+    font-size: 1.5vw;
+    text-align: center;
+    background-color: var(--background);
+}
+
+
+
+
+
+/* Finder Styles */
+
+#home-run-finder-container {
+    width: 90vw;
+    margin-left: 5vw;
+    height: fit-content;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5vh;
+}
+
+#home-run-finder-filter-container {
+    width: 30vw;
+    background-color: rgb(211, 198, 198);
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    gap: 3vh;
+    transition: background-color 1s;
+    border: 0.15vw solid transparent;
+    margin-bottom: 5vh;
+}
+
+#home-run-finder-filter-container:hover {
+    background-color: rgb(185, 174, 174);
+    border: 0.15vw solid var(--text);
+}
+
+#home-run-finder-output-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 55vw;
+    border: solid 0.5vh var(--secondary);
+    height: fit-content;
+}
+
+#home-run-search-button {
+    font-size: 2.5vw;
+    border: 0.5vw solid var(--accent);
+    padding: 1vw 1.5vw 1vw 1.5vw;
+    color: var(--text);
+    transition: color 0.6s;
+    position: relative;
+    z-index: 5;
+}
+
+#home-run-search-button:hover {
+    cursor: pointer;
     color: var(--background);
+}
+
+#home-run-search-button::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: -1;
+    width: 0%;
+    height: 0%;
+    background-color: #a14534;
+    transition: width 0.25s, height 0.25s, left 0.25s, top 0.25s, border-radius 0.4s;
+    border-radius: 10vw;
+}
+
+#home-run-search-button:hover::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background-color: #a14534;
+    border-radius: 0;
 }

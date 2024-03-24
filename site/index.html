@@ -9,11 +9,12 @@
 <body>
     <div id="header">
         <div id="header-container">
-            <button id="home-page-link" onclick="window.location.href=''">MLB Distance Compare</button>
+            <button id="home-page-link" onclick="window.location.href='index.html'">MLB Distance Compare</button>
             <div id="page-button-container">
                 <button id="visualizer-button" class="page-button" onclick="window.open('https://twitter.com/distancetracker')">Twitter</button>
                 <button id="visualizer-button" class="page-button" onclick="window.open('https://github.com/NimbleValley/home-run-api')">Github</button>
-                <button id="visualizer-button" class="page-button" onclick="window.location.href='visualize.html'">Home Run Visualizer</button>
+                <button id="visualizer-button" class="page-button" onclick="window.location.href='visualize.html'">HR Visualizer</button>
+                <button id="visualizer-button" class="page-button" onclick="window.location.href='finder.html'">HR Finder</button>
             </div>
         </div>
     </div>
@@ -36,7 +37,7 @@
         Right Click: Rotate
         Middle Mouse: Zoom
     </p>-->
-    <h1 style="margin-top: 10vh; margin-left: 2vw; margin-bottom: 1vh;">Instructions:</h1>
+    <h1 style="margin-top: 10vh; margin-left: 2vw; margin-bottom: 1vh;">Visualizer Instructions:</h1>
     <p style="margin: 3vw !important; margin-top: 3vh !important;">  To load a new hit, click the "New Hit" button. On the next screen, type in part of the player's name who hit the ball, and select from the pool of players in the select on the right. <strong> If you do not select a player, no data will load. This will be improved later.</strong> After selecting stadium (optional), outcome (optional), and year, wait for the data to load. You can select from a list of past hits and outs. Click an outcome and wait a moment for the stadium to load.  <strong>If no data loads, that means no search results matched your parameters.</strong> You should now see the hit with the stadium it took place in. <strong>Please note, stadium effects like elevation are not accounted for at the moment. An updated version is in the works.</strong>
         
         Switching stadiums is powerful because it lets you see if the ball might have been a homerun in other ballparks. When switching stadiums, please wait 3-10 seconds for the large stadium files to load. <strong>Please note, Detroit's Comerica Park & Toronto's Rodger's Centre do not have updated dimensions for the 2024 season. This will be updated eventually.</strong> Historic stadiums like Crosley Field and Polo Grounds will likely be added in the future, however, they likely will not be as detailed as previous stadiums. Also, it would be cool to add in old dimensions of existing stadiums, like the deep Tal's Hill at Minute Maid Park.

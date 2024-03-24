@@ -33,7 +33,7 @@ const playerTextSearch = document.getElementById("player-text-search");
 playerTextSearch.addEventListener("change", updatePlayerSelect);
 
 const playerSelectSearch = document.getElementById("player-select-search");
-var playerRows;;
+var playerRows;
 
 //HDRI
 new RGBELoader()
@@ -201,30 +201,31 @@ function getHit() {
 
   var maxHeight = (-16.085 * Math.pow(total_time, 2)) + (launch_speed_fts * Math.sin(launch_angle) * (total_time / 2)) + (initialHeight * 2);
   console.log("Maximum Height: " + maxHeight);
+  for (let y = -0.1; y <= 0.1; y += 0.01) {
+    for (let i = -0.1; i <= 0.1; i += 0.01) {
+      let bezier = new THREE.QuadraticBezierCurve3(
+        new THREE.Vector3(i, y, 0),
+        new THREE.Vector3(landing.position.x / 2 + i, maxHeight * SCALE * -1 * DISTANCE_SCALE + y, landing.position.z / 2),
+        new THREE.Vector3(landing.position.x + i, landing.position.y + y, landing.position.z)
+      );
 
-  for (let i = -0.1; i <= 0.1; i += 0.01) {
-    let bezier = new THREE.QuadraticBezierCurve3(
-      new THREE.Vector3(i, 0, 0),
-      new THREE.Vector3(landing.position.x / 2 + i, maxHeight * SCALE * -1 * DISTANCE_SCALE, landing.position.z / 2),
-      new THREE.Vector3(landing.position.x + i, landing.position.y, landing.position.z)
-    );
+      /*curve.points.push(new THREE.Vector3(landing.position.x / 2, 100 * SCALE, landing.position.z / 2));
+      curve.points.push(new THREE.Vector3(landing.position.x, landing.position.y, landing.position.z));*/
 
-    /*curve.points.push(new THREE.Vector3(landing.position.x / 2, 100 * SCALE, landing.position.z / 2));
-    curve.points.push(new THREE.Vector3(landing.position.x, landing.position.y, landing.position.z));*/
+      let points = bezier.getPoints(50);
+      let curveGeometry = new THREE.BufferGeometry().setFromPoints(points);
 
-    let points = bezier.getPoints(50);
-    let curveGeometry = new THREE.BufferGeometry().setFromPoints(points);
+      let curveMaterial = new THREE.LineBasicMaterial({
+        color: 0xff0000,
+        linewidth: 100,
+        linecap: 'round', //ignored by WebGLRenderer
+        linejoin: 'round' //ignored by WebGLRenderer
+      });
 
-    let curveMaterial = new THREE.LineBasicMaterial({
-      color: 0xff0000,
-      linewidth: 100,
-      linecap: 'round', //ignored by WebGLRenderer
-      linejoin: 'round' //ignored by WebGLRenderer
-    });
-
-    let curveObject = new THREE.Line(curveGeometry, curveMaterial);
-    curveObject.name = "curve" + i;
-    scene.add(curveObject);
+      let curveObject = new THREE.Line(curveGeometry, curveMaterial);
+      curveObject.name = "curve" + (i * 10) + 10 + (y * 10 * 20) + 10;
+      scene.add(curveObject);
+    }
   }
 }
 
@@ -275,8 +276,10 @@ document.getElementById("new-hit").addEventListener("click", function () {
 function statcast_search() {
 
   //Remove old curve & Landing
-  for (let i = -0.1; i <= 0.1; i += 0.01) {
-    scene.remove(scene.getObjectByName("curve" + i));
+  for (let y = -0.1; y <= 0.1; y += 0.01) {
+    for (let i = -0.1; i <= 0.1; i += 0.01) {
+      scene.remove(scene.getObjectByName("curve" + (i*10) + 10 + (y*10*20) + 10));
+    }
   }
   scene.remove(scene.getObjectByName("landing"));
 
@@ -303,9 +306,8 @@ function statcast_search() {
   parseCSV(`./data/${year}.csv`);
 }
 
-//parseCSV("./data/2023.csv");
-
 function parseCSV(url) {
+  loadingMessage.style.display = "flex";
   console.log(url);
 
   uploadHelp.style.display = "none";
@@ -325,7 +327,7 @@ function parseCSV(url) {
       let dataCount = 0;
 
       for (var i = 1; i < data.data.length; i++) {
-        if ((outcomeValue != "field_out" && data.data[i][8] == "field_out") || (outcomeValue == "field_out" && data.data[i][8] != "field_out")) {
+        if ((outcomeValue == "hit" && data.data[i][8] == "field_out") || (outcomeValue == "field_out" && data.data[i][8] != "field_out")) {
           continue;
         }
 

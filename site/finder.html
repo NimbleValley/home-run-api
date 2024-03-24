@@ -30,19 +30,6 @@
         <div id="home-run-finder-filter-container">
             <h2>Home Run Filters</h2>
 
-            <!--<div>
-                <label for="year-select">Year:</label>
-                <select name="year-select" id="year-select">
-                    <option value="-1">Any</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
-                </select>
-            </div>-->
 
             <div>
                 <label for="away-team-select">Away Team:</label>
@@ -127,6 +114,21 @@
                 <p style="margin: 0vw;">'</p>
             </div>
 
+            <div>
+                <label for="year-select">Year:</label>
+                <select name="year-select" id="year-select">
+                    <option value="0">Any</option>
+                    <option value="1">Custom</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                </select>
+            </div>
+
             <div style="width: 100%; display: flex; justify-content: center;">
                 <label for="start-date-input">Start Date:</label>
                 <input type="date" id="start-date-input" name="start-date-input" style="width: fit-content;">
@@ -155,7 +157,9 @@
             </div>
 
         </div>
+
         <div id="home-run-finder-output-container">
+            <!--<div class="home-run-result-container">1/2/2023 - 427' - MIL at KC</div>-->
         </div>
     </div>
 </body>

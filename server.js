@@ -140,6 +140,9 @@ async function automateUpload(hr, des) {
         await new Promise(resolve => setTimeout(resolve, 100));
     }
     robot.keyTap("enter");
+
+    await(500);
+    gitPush();
 }
 
 
@@ -171,6 +174,25 @@ app.get("/commit", function (req, res) {
     gitPush();
 
     res.end(JSON.stringify({ "recieved": "All good" }));
+});
+
+
+
+// Upload statcast data
+app.post("/upload-statcast", function (req, res) {
+    let data = req.body.data;
+
+    console.log(data)
+
+    fs.appendFile("./site/data/2024.csv", data + "\n", function (err) {
+        if (err) {
+            console.error("Error writing " + data);
+            res.end(JSON.stringify({ "recieved": "All good" }))
+        } else {
+            console.log("Wrote " + data);
+            res.end(JSON.stringify({ "recieved": "Bad smh" }))
+        }
+    });
 });
 
 

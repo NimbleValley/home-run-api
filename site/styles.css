@@ -348,4 +348,10 @@ input {
     width: 92.5%;
     padding: 0.75vw;
     font-size: 1.25vw;
+    border: solid 0.15vw transparent;
+    transition: border 0.15s;
+}
+
+.home-run-result-container:hover {
+    border: solid 0.15vw var(--text);
 }

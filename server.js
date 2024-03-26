@@ -72,6 +72,7 @@ function generateGIF(num, hr, des) {
     encoder.setQuality(10);
 
     const imgList = fs.readdirSync('./images/');
+    console.log("IMAGE LENGTH: " + imgList.length)
     imgList.forEach(async (f, i) => {
         const image = await loadImage(`./images/${f}`);
         if (f.includes(String(num))) {
@@ -141,7 +142,7 @@ async function automateUpload(hr, des) {
     }
     robot.keyTap("enter");
 
-    await(500);
+    await (500);
     gitPush();
 }
 
@@ -182,15 +183,23 @@ app.get("/commit", function (req, res) {
 app.post("/upload-statcast", function (req, res) {
     let data = req.body.data;
 
-    console.log(data)
+    let text = "";
 
-    fs.appendFile("./site/data/2024.csv", data + "\n", function (err) {
+    for (let [key, value] of Object.entries(data)) {
+        //console.log(`${key}: ${value}`);
+        text += `${value}, `;
+    }
+    text.substring(0, text.length - 1);
+
+    //console.log(text)
+
+    fs.appendFile("./site/data/2024.csv", text + "\n", function (err) {
         if (err) {
-            console.error("Error writing " + data);
-            res.end(JSON.stringify({ "recieved": "All good" }))
+            //console.error("Error writing " + data);
+            res.end(JSON.stringify({ "recieved": "Error writing statcast data" }));
         } else {
-            console.log("Wrote " + data);
-            res.end(JSON.stringify({ "recieved": "Bad smh" }))
+            //console.log("Wrote " + data);
+            res.end(JSON.stringify({ "recieved": "All good" }));
         }
     });
 });

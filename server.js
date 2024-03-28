@@ -4,8 +4,8 @@ const fs = require('fs');
 const fsExtra = require('fs-extra');
 const path = require("path");
 const bodyParser = require('body-parser');
-const clipboardy = require("clipboardy");
 var robot = require("robotjs");
+var clipboardy = import("clipboardy");
 
 // Port of server
 const PORT = process.env.PORT || 8080;
@@ -31,17 +31,17 @@ const { exec } = require('child_process');
 app.post("/upload", function (req, res) {
     var base64Data = req.body.data.replace(/^data:image\/png;base64,/, "");
 
-    console.log(req.body.stadium);
+    //console.log(req.body.stadium + ", " + String(base64Data).substring(0,100));
     var filePath = __dirname + `/images/${String(req.body.num) + String(req.body.stadium)}.png`;
-
+    
+    fs.writeFile(filePath, base64Data, 'base64', function (err) {
+        res.end(JSON.stringify({ "recieved": req.body.stadium }))
+    });
+    
     if (req.body.stadium == "NYY") {
         // Last stadium, so now can generate the gif
         generateGIF(req.body.num, req.body.numBallparks, req.body.des)
     }
-
-    fs.writeFile(filePath, base64Data, 'base64', function (err) {
-        res.end(JSON.stringify({ "recieved": req.body.stadium }))
-    });
 });
 
 
@@ -72,19 +72,28 @@ function generateGIF(num, hr, des) {
     encoder.setQuality(10);
 
     const imgList = fs.readdirSync('./images/');
-    console.log("IMAGE LENGTH: " + imgList.length)
     imgList.forEach(async (f, i) => {
-        const image = await loadImage(`./images/${f}`);
-        if (f.includes(String(num))) {
+        if (f.includes(String(num)) && !f.includes("NYY")) {
+            let image = await loadImage(`./images/${f}`);
+            console.log("Adding frame " + f + ", " + i);
             ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
             encoder.addFrame(ctx);
         }
-        if (i === imgList.length - 1) {
+        if (i >= imgList.length - 1) {
+            //await sleep(4000);
+            console.log("Creating image.");
             encoder.finish();
-            automateUpload(hr, des)
+            automateUpload(hr, des);
         }
     });
 }
+
+
+
+app.get("/test_gif", function (req, res) {
+    generateGIF(1000, 17, "Test");
+    res.end(JSON.stringify({ "recieved": "All good" }))
+});
 
 
 
@@ -98,8 +107,8 @@ app.get("/test_mouse", function (req, res) {
 
 // Automate mouse movement for upload
 async function automateUpload(hr, des) {
-    console.log("AUTO")
-    clipboardy.writeSync("Home run at " + hr + " stadiums: " + des);
+    console.log("AUTO");
+    (await clipboardy).default.writeSync("Home run at " + hr + " stadiums: " + des);
 
     await new Promise(resolve => setTimeout(resolve, 2000));
     var mouse = robot.getMousePos();
@@ -149,7 +158,7 @@ async function automateUpload(hr, des) {
 
 
 // Erases previous images & gifs
-app.get("/erase", function (req, res) {
+app.get("/erase", async function (req, res) {
     const imageFolder = './images';
     const outputFolder = './output';
 
@@ -177,7 +186,7 @@ app.get("/commit", function (req, res) {
     res.end(JSON.stringify({ "recieved": "All good" }));
 });
 
-
+const deiredValues = ["batter_name", "batter", "des", "events", "game_pk", "hc_x", "hc_y", "hit_distance", "hit_angle", "hit_speed", "inning", "outs", "play_id", "pitcher_name", "pitcher", "team_batting", "team_fielding"];
 
 // Upload statcast data
 app.post("/upload-statcast", function (req, res) {
@@ -187,9 +196,11 @@ app.post("/upload-statcast", function (req, res) {
 
     for (let [key, value] of Object.entries(data)) {
         //console.log(`${key}: ${value}`);
-        text += `${value}, `;
+        if (deiredValues.includes(key)) {
+            text += `${value}, `;
+        }
     }
-    text.substring(0, text.length - 1);
+    text += new Date();
 
     //console.log(text)
 
@@ -215,4 +226,11 @@ function gitPush() {
                 console.log(`exec error: ${error}`);
             }
         });
+}
+
+
+
+
+const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
 }

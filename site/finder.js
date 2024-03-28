@@ -124,29 +124,52 @@ async function search() {
                 data = results.data;
 
                 for (let i = 1; i < data.length; i++) {
-                    if (data[i][8] != "home_run") {
-                        continue;
-                    }
+                    if (year != 2024) {
+                        if (data[i][8] != "home_run") {
+                            continue;
+                        }
 
-                    if (data[i][6] != playerId && playerId != -1) {
-                        continue;
-                    }
+                        if (data[i][6] != playerId && playerId != -1) {
+                            continue;
+                        }
 
-                    if (parseInt(data[i][52]) < minDistance || parseInt(data[i][52]) > maxDistance) {
-                        continue;
-                    }
+                        if (parseInt(data[i][52]) < minDistance || parseInt(data[i][52]) > maxDistance) {
+                            continue;
+                        }
 
-                    if (parseInt(awayTeamSelect.value) != 31 && awayTeamSelect.value != data[i][20]) {
-                        continue;
-                    }
+                        if (parseInt(awayTeamSelect.value) != 31 && awayTeamSelect.value != data[i][20]) {
+                            continue;
+                        }
 
-                    if (parseInt(homeTeamSelect.value) != 31 && homeTeamSelect.value != data[i][19]) {
-                        continue;
+                        if (parseInt(homeTeamSelect.value) != 31 && homeTeamSelect.value != data[i][19]) {
+                            continue;
+                        }
+                    } else {
+                        console.log(data[i][18])
+                        if (data[i][3] != " Home Run") {
+                            continue;
+                        }
+
+                        if (data[i][0] != playerId && playerId != -1) {
+                            continue;
+                        }
+
+                        if (parseInt(data[i][8]) < minDistance || parseInt(data[i][8]) > maxDistance) {
+                            continue;
+                        }
+
+                        if (parseInt(awayTeamSelect.value) != 31 && awayTeamSelect.value != data[i][16]) {
+                            continue;
+                        }
+
+                        if (parseInt(homeTeamSelect.value) != 31 && homeTeamSelect.value != data[i][15]) {
+                            continue;
+                        }
                     }
 
                     let tempContainer = document.createElement("div");
                     tempContainer.className = "home-run-result-container";
-                    tempContainer.innerText = `${data[i][1]} - ${data[i][52]}' - ${data[i][20]} at ${data[i][19]}: ${data[i][15]}`;
+                    tempContainer.innerText = `${data[i][1]} - ${Math.round(parseFloat(data[i][8]))}' - ${data[i][16]} vs ${data[i][15]}: ${data[i][2]}`;
 
                     outputContainer.appendChild(tempContainer);
                 }

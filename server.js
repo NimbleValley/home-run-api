@@ -75,6 +75,7 @@ function generateGIF(num, hr, des) {
     imgList.forEach(async (f, i) => {
         if (f.includes(String(num)) && !f.includes("NYY")) {
             let image = await loadImage(`./images/${f}`);
+            await new Promise(resolve => setTimeout(resolve, 250));
             console.log("Adding frame " + f + ", " + i);
             ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
             encoder.addFrame(ctx);
@@ -145,7 +146,7 @@ async function automateUpload(hr, des) {
     robot.keyToggle("control", "up", []);
 
     await new Promise(resolve => setTimeout(resolve, 3000));
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 8; i++) {
         robot.keyTap("tab");
         await new Promise(resolve => setTimeout(resolve, 100));
     }

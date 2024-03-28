@@ -146,7 +146,7 @@ async function automateUpload(hr, des) {
     robot.keyToggle("control", "up", []);
 
     await new Promise(resolve => setTimeout(resolve, 3000));
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < 9; i++) {
         robot.keyTap("tab");
         await new Promise(resolve => setTimeout(resolve, 100));
     }

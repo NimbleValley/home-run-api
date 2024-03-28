@@ -72,6 +72,7 @@ function generateGIF(num, hr, des) {
     encoder.setQuality(10);
 
     const imgList = fs.readdirSync('./images/');
+    let counter = 0;
     imgList.forEach(async (f, i) => {
         if (f.includes(String(num)) && !f.includes("NYY")) {
             let image = await loadImage(`./images/${f}`);
@@ -79,8 +80,9 @@ function generateGIF(num, hr, des) {
             console.log("Adding frame " + f + ", " + i);
             ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
             encoder.addFrame(ctx);
+            counter ++;
         }
-        if (i >= imgList.length - 1) {
+        if (counter >= 28) {
             //await sleep(4000);
             console.log("Creating image.");
             encoder.finish();

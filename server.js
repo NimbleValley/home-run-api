@@ -76,16 +76,16 @@ function generateGIF(num, hr, des) {
     imgList.forEach(async (f, i) => {
         if (f.includes(String(num)) && !f.includes("NYY")) {
             let image = await loadImage(`./images/${f}`);
-            await new Promise(resolve => setTimeout(resolve, 250));
+            //await new Promise(resolve => setTimeout(resolve, 250));
             console.log("Adding frame " + f + ", " + i);
             ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
             encoder.addFrame(ctx);
             counter ++;
         }
-        if (counter >= 28) {
-            //await sleep(4000);
-            console.log("Creating image.");
+        if(counter >= 29) {
+            console.log(i + ", " + counter);
             encoder.finish();
+            console.log("Finishing gif...");
             automateUpload(hr, des);
         }
     });

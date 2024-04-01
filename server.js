@@ -26,6 +26,9 @@ app.use(fileUpload());
 const { exec } = require('child_process');
 
 
+const teamAbbreviations = ["ARI", "ATL", "BAL", "BOS", "CHC", "CWS", "CIN", "CLE", "COL", "DET", "HOU", "KC", "LAA", "LAD", "MIA", "MIL", "MIN", "NYM", "NYY", "OAK", "PHI", "PIT", "SD", "SF", "SEA", "STL", "TB", "TEX", "TOR", "WSH"];
+const teamHashtags = ["#Dbacks", "#BravesCountry #Braves", "#Birdland #Orioles", "#DirtyWater #RedSox", "#YouHaveToSeeIt #Cubs", "#WhiteSox", "#ATOBTTR #Reds", "#ForTheLand #Guardians", "#Rockies", "#RepDetroit #Tigers", "#Relentless #Astros", "#HEYHEYHEYHEY #Royals", "#RepTheHalo #Angels", "#Dodgers", "#HomeOfBeisbol #Marlins", "#ThisIsMyCrew #Brewers", "#MNTwins", "#LGM #Mets", "#RepBX #Yankees", "#A's", "#RingTheBell #Phillies", "#LetsGoBucs #Pirates", "#Padres", "#SFGiants", "#TridentsUp #Mariners", "#ForTheLou #STLCards #Cardinals", "#RaysUp #Rays", "#StraightUpTX #Rangers", "#TOTHECORE #BlueJays", "#NATITUDE #Nationals"];
+console.log(`Abb length: ${teamAbbreviations.length}, Hash length: ${teamHashtags.length}`);
 
 // Upload images for gifs
 app.post("/upload", function (req, res) {
@@ -40,7 +43,7 @@ app.post("/upload", function (req, res) {
     
     if (req.body.stadium == "NYY") {
         // Last stadium, so now can generate the gif
-        generateGIF(req.body.num, req.body.numBallparks, req.body.des)
+        generateGIF(req.body.num, req.body.numBallparks, req.body.des, req.body.teamBatting);
     }
 });
 
@@ -60,7 +63,14 @@ const height = 1000;
 
 
 // Create the gif
-function generateGIF(num, hr, des) {
+function generateGIF(num, hr, des, hitTeam) {
+    console.log(hitTeam);
+
+    let hashtag = "#MLB ";
+    if(teamAbbreviations.includes(hitTeam)) {
+        hashtag += teamHashtags[teamAbbreviations.indexOf(hitTeam)];
+    }
+
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
 
@@ -86,7 +96,7 @@ function generateGIF(num, hr, des) {
             console.log(i + ", " + counter);
             encoder.finish();
             console.log("Finishing gif...");
-            automateUpload(hr, des);
+            automateUpload(hr, des, hashtag);
         }
     });
 }
@@ -109,9 +119,9 @@ app.get("/test_mouse", function (req, res) {
 
 
 // Automate mouse movement for upload
-async function automateUpload(hr, des) {
+async function automateUpload(hr, des, hashtag) {
     console.log("AUTO");
-    (await clipboardy).default.writeSync("Home run at " + hr + " stadiums: " + des);
+    (await clipboardy).default.writeSync("Home run at " + hr + " stadiums: " + des + " " + hashtag);
 
     await new Promise(resolve => setTimeout(resolve, 2000));
     var mouse = robot.getMousePos();

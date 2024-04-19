@@ -86,9 +86,11 @@ function generateGIF(num, hr, des, hitTeam) {
     imgList.forEach(async (f, i) => {
         if (f.includes(String(num)) && !f.includes("NYY")) {
             let image = await loadImage(`./images/${f}`);
+            let icon = await loadImage(`./team_icons/${teamAbbreviations[counter]}.svg`);
             //await new Promise(resolve => setTimeout(resolve, 250));
             console.log("Adding frame " + f + ", " + i);
             ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(icon, 0, 0, image.width/10, image.height/10);
             encoder.addFrame(ctx);
             counter ++;
         }

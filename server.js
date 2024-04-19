@@ -90,7 +90,8 @@ function generateGIF(num, hr, des, hitTeam) {
             //await new Promise(resolve => setTimeout(resolve, 250));
             console.log("Adding frame " + f + ", " + i);
             ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-            ctx.drawImage(icon, 0, canvas.height - (canvas.height / 9), canvas.width/9, canvas.height/9);
+            //ctx.drawImage(icon, 5, canvas.height - (canvas.height / 8) - 5, canvas.width/8, canvas.height/8);
+            ctx.drawImage(icon, 5, canvas.height - (canvas.height / 8) - 5, icon.width, icon.height);
             encoder.addFrame(ctx);
             counter ++;
         }

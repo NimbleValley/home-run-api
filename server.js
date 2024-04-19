@@ -93,7 +93,8 @@ function generateGIF(num, hr, des, hitTeam) {
             //ctx.drawImage(icon, 5, canvas.height - (canvas.height / 8) - 5, canvas.width/8, canvas.height/8);
 
             let iconAspect = icon.width / icon.height;
-            ctx.drawImage(icon, 5, canvas.height - (canvas.height / 7) - 5, canvas.width/7 * iconAspect, canvas.height/7);
+            //10/50 = 0.2
+            ctx.drawImage(icon, 5, canvas.height - (canvas.height / 7) - 5, canvas.width/7, canvas.height/7);
             encoder.addFrame(ctx);
             counter ++;
         }

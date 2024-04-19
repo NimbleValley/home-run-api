@@ -91,7 +91,9 @@ function generateGIF(num, hr, des, hitTeam) {
             console.log("Adding frame " + f + ", " + i);
             ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
             //ctx.drawImage(icon, 5, canvas.height - (canvas.height / 8) - 5, canvas.width/8, canvas.height/8);
-            ctx.drawImage(icon, 5, canvas.height - (canvas.height / 8) - 5, icon.width, icon.height);
+
+            let iconAspect = icon.width / icon.height;
+            ctx.drawImage(icon, 5, canvas.height - (canvas.height / 7) - 5, canvas.width/7 * iconAspect, canvas.height/7);
             encoder.addFrame(ctx);
             counter ++;
         }

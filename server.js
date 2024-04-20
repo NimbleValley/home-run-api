@@ -43,7 +43,7 @@ app.post("/upload", function (req, res) {
     
     if (req.body.stadium == "NYY") {
         // Last stadium, so now can generate the gif
-        generateGIF(req.body.num, req.body.numBallparks, req.body.des, req.body.teamBatting);
+        generateGIF(req.body.num, req.body.numBallparks, req.body.des, req.body.teamBatting, req.body.distance, req.body.playId);
     }
 });
 
@@ -63,7 +63,7 @@ const height = 1000;
 
 
 // Create the gif
-function generateGIF(num, hr, des, hitTeam) {
+function generateGIF(num, hr, des, hitTeam, distance, id) {
     console.log(hitTeam);
 
     let hashtag = "#MLB ";
@@ -94,7 +94,7 @@ function generateGIF(num, hr, des, hitTeam) {
 
             let iconAspect = icon.width / icon.height;
             //10/50 = 0.2
-            ctx.drawImage(icon, 5, canvas.height - (canvas.height / 7) - 5, canvas.width/7, canvas.height/7);
+            ctx.drawImage(icon, canvas.width - ((canvas.width/7) * iconAspect) - 15, canvas.height - (canvas.height / 7) - 15, (canvas.width/7) * iconAspect, canvas.height/7);
             encoder.addFrame(ctx);
             counter ++;
         }
@@ -102,8 +102,8 @@ function generateGIF(num, hr, des, hitTeam) {
             console.log(i + ", " + counter);
             encoder.finish();
             console.log("Finishing gif...");
-            hashtag += " .";
-            automateUpload(hr, des, hashtag);
+            hashtag += " . ";
+            automateUpload(hr, des, hashtag, distance, id);
         }
     });
 }
@@ -126,9 +126,9 @@ app.get("/test_mouse", function (req, res) {
 
 
 // Automate mouse movement for upload
-async function automateUpload(hr, des, hashtag) {
+async function automateUpload(hr, des, hashtag, distance, id) {
     console.log("AUTO");
-    (await clipboardy).default.writeSync("Home run at " + hr + " stadiums: " + des + " " + hashtag);
+    (await clipboardy).default.writeSync(distance + "'. Home run at " + hr + " stadiums: " + des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + id);
 
     await new Promise(resolve => setTimeout(resolve, 2000));
     var mouse = robot.getMousePos();

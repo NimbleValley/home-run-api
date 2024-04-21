@@ -41,7 +41,7 @@ app.post("/upload", function (req, res) {
         res.end(JSON.stringify({ "recieved": req.body.stadium }))
     });
     
-    if (req.body.stadium == "NYY") {
+    if (req.body.stadium == "LOL") {
         // Last stadium, so now can generate the gif
         generateGIF(req.body.num, req.body.numBallparks, req.body.des, req.body.teamBatting, req.body.distance, req.body.playId);
     }
@@ -79,12 +79,12 @@ function generateGIF(num, hr, des, hitTeam, distance, id) {
     encoder.start();
     encoder.setRepeat(0);
     encoder.setDelay(1250);
-    encoder.setQuality(25);
+    encoder.setQuality(50);
 
     const imgList = fs.readdirSync('./images/');
     let counter = 0;
     imgList.forEach(async (f, i) => {
-        if (f.includes(String(num)) && !f.includes("NYY")) {
+        if (f.includes(String(num)) && !f.includes("LOL")) {
             let image = await loadImage(`./images/${f}`);
             let icon = await loadImage(`./team_icons/${f.substring(3, 6)}.svg`);
             //await new Promise(resolve => setTimeout(resolve, 250));

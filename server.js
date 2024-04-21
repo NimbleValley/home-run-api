@@ -98,7 +98,7 @@ function generateGIF(num, hr, des, hitTeam, distance, id) {
             encoder.addFrame(ctx);
             counter ++;
         }
-        if(counter >= 29) {
+        if(counter >= 30) {
             console.log(i + ", " + counter);
             encoder.finish();
             console.log("Finishing gif...");

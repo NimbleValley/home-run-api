@@ -79,7 +79,7 @@ function generateGIF(num, hr, des, hitTeam, distance, id) {
     encoder.start();
     encoder.setRepeat(0);
     encoder.setDelay(1250);
-    encoder.setQuality(50);
+    encoder.setQuality(1);
 
     const imgList = fs.readdirSync('./images/');
     let counter = 0;
@@ -149,7 +149,8 @@ async function automateUpload(hr, des, hashtag, distance, id) {
     }
     // Add File
     robot.keyTap("down");
-    robot.keyTap("up");
+    for(let i = 0; i < 10; i ++)
+        robot.keyTap("up");
     robot.keyTap("enter");
     await new Promise(resolve => setTimeout(resolve, 3000));
     // Type

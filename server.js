@@ -79,7 +79,7 @@ function generateGIF(num, hr, des, hitTeam, distance, id) {
     encoder.start();
     encoder.setRepeat(0);
     encoder.setDelay(1250);
-    encoder.setQuality(1);
+    encoder.setQuality(7);
 
     const imgList = fs.readdirSync('./images/');
     let counter = 0;

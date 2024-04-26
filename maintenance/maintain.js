@@ -35,7 +35,7 @@ async function fetchData() {
 
             for (let i = 1; i < data.length; i++) {
                 batter.push(data[i][6]);
-                batter_name.push(data[i][5].replace(",", ""));
+                batter_name.push(data[i][5].replace(",", ""));  
                 description.push(data[i][8]);
                 des.push(data[i][9]);
                 game_pk.push(data[i][58]);

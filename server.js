@@ -147,7 +147,7 @@ async function automateUpload(hr, des, hashtag, distance, id) {
     var mouse = robot.getMousePos();
     robot.mouseClick();
     // New Tweet
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
     for (var i = 0; i < 2; i++) {
         robot.keyTap("tab");
         await new Promise(resolve => setTimeout(resolve, 100));

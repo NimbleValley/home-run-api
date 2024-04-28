@@ -11,6 +11,8 @@ var clipboardy = import("clipboardy");
 const PORT = process.env.PORT || 8080;
 const app = express();
 
+var uploadedFiles = [];
+
 app.use(bodyParser.json({
     limit: '500mb'
 }));
@@ -80,6 +82,17 @@ function generateGIF(num, hr, des, hitTeam, distance, id) {
     encoder.setRepeat(0);
     encoder.setDelay(1250);
     encoder.setQuality(7);
+
+    uploadedFiles.push(`result(${String(hr)})${des}.gif`);
+    if(uploadedFiles.length > 10) {
+        try {
+            fs.unlinkSync(`./output/${uploadedFiles[0]}`);
+            uploadedFiles.splice(0, 1)
+            //file removed
+          } catch(err) {
+            console.error(err)
+          }
+    }
 
     const imgList = fs.readdirSync('./images/');
     let counter = 0;

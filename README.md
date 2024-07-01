@@ -1,0 +1,1 @@
+Ever wanted to see where a home run would have landed in a different stadium, or simply want to relieve the blast? Here is the project for you. Additionally, follow on twitter to get semi-live home run alerts: https://twitter.com/distancetracker

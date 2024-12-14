@@ -306,7 +306,7 @@ function statcast_search() {
   title.innerText = "Search Results";
   searchResults.appendChild(title);
 
-  currentYear = (year == 2024);
+  currentYear = (year == 2025);
 
   parseCSV(`./data/${year}.csv`);
 }

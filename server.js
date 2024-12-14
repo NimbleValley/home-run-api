@@ -8,6 +8,8 @@ const videoshow = require('videoshow');
 var robot = require("robotjs");
 var clipboardy = import("clipboardy");
 
+var uploadingGif = false;
+
 var videoOptions = {
     fps: 25,
     loop: 1.15, // seconds
@@ -44,7 +46,7 @@ app.use(fileUpload());
 const { exec } = require('child_process');
 
 
-const teamAbbreviations = ["ARZ", "ATL", "BAL", "BOS", "CHC", "CWS", "CIN", "CLE", "COL", "DET", "HOU", "KC", "LAA", "LAD", "MIA", "MIL", "MIN", "NYM", "NYY", "OAK", "PHI", "PIT", "SD", "SF", "SEA", "STL", "TB", "TEX", "TOR", "WSH"];
+const teamAbbreviations = ["AZ", "ATL", "BAL", "BOS", "CHC", "CWS", "CIN", "CLE", "COL", "DET", "HOU", "KC", "LAA", "LAD", "MIA", "MIL", "MIN", "NYM", "NYY", "OAK", "PHI", "PIT", "SD", "SF", "SEA", "STL", "TB", "TEX", "TOR", "WSH"];
 const teamHashtags = ["#Dbacks", "#BravesCountry #Braves", "#Birdland #Orioles", "#DirtyWater #RedSox", "#YouHaveToSeeIt #Cubs", "#WhiteSox", "#ATOBTTR #Reds", "#ForTheLand #Guardians", "#Rockies", "#RepDetroit #Tigers", "#Relentless #Astros", "#Royals", "#RepTheHalo #Angels", "#Dodgers", "#HomeOfBeisbol #Marlins", "#ThisIsMyCrew #Brewers", "#MNTwins", "#LGM #Mets", "#RepBX #Yankees", "#A's", "#RingTheBell #Phillies", "#LetsGoBucs #Pirates", "#Padres #LetsGoPadres", "#SFGiants", "#TridentsUp #Mariners", "#ForTheLou #STLCards #Cardinals", "#RaysUp #Rays", "#StraightUpTX #Rangers", "#TOTHECORE #BlueJays", "#NATITUDE #Nationals"];
 console.log(`Abb length: ${teamAbbreviations.length}, Hash length: ${teamHashtags.length}`);
 
@@ -53,6 +55,7 @@ app.post("/upload", function (req, res) {
     var base64Data = req.body.data.replace(/^data:image\/png;base64,/, "");
 
     //console.log(req.body.stadium + ", " + String(base64Data).substring(0,100));
+    console.log(req.body.stadium + ", ");
     let filePath;
     if (parseInt(req.body.num) % 2 == 0) {
         filePath = __dirname + `/images2/${String(req.body.num) + String(req.body.stadium)}.png`;
@@ -66,7 +69,7 @@ app.post("/upload", function (req, res) {
 
     if (req.body.stadium == "LOL") {
         // Last stadium, so now can generate the gif
-        generateGIF(req.body.num, req.body.numBallparks, req.body.des, req.body.teamBatting, req.body.distance, req.body.playId, req.body.homerun, req.body.team_fielding);
+        generateGIF(req);
     }
 });
 
@@ -80,44 +83,47 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 // Gif settings
 const GIFEncoder = require('gifencoder');
 const { createCanvas, loadImage } = require('canvas');
-const width = 1000;
+const width = 1100;
 const height = 1000;
+const canvasHeight = 1100;
 
 
 
 // Create the gif
-function generateGIF(num, hr, des, hitTeam, distance, id, wasHomerun, team_fielding) {
-    console.log(hitTeam);
+function generateGIF(req) {
+
+
+    console.log(req.body.home_team);
     var number = imageID;
 
     let hashtag = "#MLB ";
-    if(teamAbbreviations.includes(hitTeam)) {
-        hashtag += teamHashtags[teamAbbreviations.indexOf(hitTeam)];
+    if (teamAbbreviations.includes(req.body.teamBatting)) {
+        hashtag += teamHashtags[teamAbbreviations.indexOf(req.body.teamBatting)];
     }
 
-    const canvas = createCanvas(width, height);
+    const canvas = createCanvas(width, canvasHeight);
     const ctx = canvas.getContext('2d');
 
-    const encoder = new GIFEncoder(width, height);
-    encoder.createReadStream().pipe(fs.createWriteStream(`./output/result(${String(hr)})${des}.gif`));
+    const encoder = new GIFEncoder(width, canvasHeight);
+    encoder.createReadStream().pipe(fs.createWriteStream(`./output/result(${String(req.body.numBallparks)})${req.body.des}.gif`));
     encoder.start();
     encoder.setRepeat(0);
     encoder.setDelay(1050);
-    encoder.setQuality(7);
+    encoder.setQuality(8);
 
-    uploadedFiles.push(`result(${String(hr)})${des}.gif`);
-    if(uploadedFiles.length > 10) {
+    uploadedFiles.push(`result(${String(req.body.numBallparks)})${req.body.des}.gif`);
+    if (uploadedFiles.length > 10) {
         try {
             fs.unlinkSync(`./output/${uploadedFiles[0]}`);
             uploadedFiles.splice(0, 1)
             //file removed
-          } catch(err) {
+        } catch (err) {
             console.error(err)
-          }
+        }
     }
 
     var imgDir;
-    if(number % 2 == 0) {
+    if (number % 2 == 0) {
         imgDir = "./images2/";
     } else {
         imgDir = "./images1/";
@@ -126,27 +132,67 @@ function generateGIF(num, hr, des, hitTeam, distance, id, wasHomerun, team_field
     console.error(imgDir);
     console.error(number);
     let counter = 0;
-    imgList.forEach(async (f, i) => {
-        if (f.includes(String(number)) && !f.includes("LOL")) {
-            let image = await loadImage(`${imgDir}${f}`);
-            let icon = await loadImage(`./team_icons/${f.substring(3, 6)}.svg`);
-            //await new Promise(resolve => setTimeout(resolve, 250));
-            console.log("Adding frame " + f + ", " + i);
-            ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-            //ctx.drawImage(icon, 5, canvas.height - (canvas.height / 8) - 5, canvas.width/8, canvas.height/8);
+    let addedToGif = [];
 
-            let iconAspect = icon.width / icon.height;
-            //10/50 = 0.2
-            ctx.drawImage(icon, canvas.width - ((canvas.width/7) * iconAspect) - 15, canvas.height - (canvas.height / 7) - 15, (canvas.width/7) * iconAspect, canvas.height/7);
-            encoder.addFrame(ctx);
-            counter ++;
+    imgList.forEach(async (f, i) => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (f.includes(String(number)) && !f.includes("LOL")) {
+            if (req.body.home_team.localeCompare(f.substring(3, 6)) != 1) {
+                let image = await loadImage(`${imgDir}${f}`);
+                let icon = await loadImage(`./team_icons/${f.substring(3, 6)}.svg`);
+                //await new Promise(resolve => setTimeout(resolve, 250));
+                console.log("Adding frame " + f + ", " + addedToGif.length);
+                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, height);
+
+                if (req.body.home_team == f.substring(3, 6)) {
+                    ctx.font = "72px Arial";
+                    ctx.fillStyle = "red";
+                    ctx.fillText("Hit here.", 15, height - 15);
+                }
+
+                ctx.font = "65px Arial";
+                ctx.fillStyle = "white";
+                ctx.fillText(`📐 ${req.body.hit_angle}° | 💨 ${req.body.hit_speed} MPH | 📏 ${req.body.distance}'`, 15, canvas.height - 25);
+                //ctx.drawImage(icon, 5, canvas.height - (canvas.height / 8) - 5, canvas.width/8, canvas.height/8);
+
+                let iconAspect = icon.width / icon.height;
+                //10/50 = 0.2
+                ctx.drawImage(icon, canvas.width - ((canvas.width / 7) * iconAspect) - 15, height - (height / 7) - 15, (canvas.width / 7) * iconAspect, height / 7);
+                encoder.addFrame(ctx);
+                addedToGif.push(f.substring(3, 6));
+            }
+
+            counter++;
         }
-        if(counter >= 32) {
-            console.log(i + ", " + counter);
-            encoder.finish();
-            console.log("Finishing gif...");
-            hashtag += " . ";
-            automateUpload(hr, des, hashtag, distance, id, wasHomerun, team_fielding);
+        if (counter >= 32) {
+            imgList.forEach(async (f, i) => {
+                if (f.includes(String(number)) && !f.includes("LOL") && addedToGif.indexOf(f.substring(3, 6)) == -1) {
+                    let image = await loadImage(`${imgDir}${f}`);
+                    let icon = await loadImage(`./team_icons/${f.substring(3, 6)}.svg`);
+                    //await new Promise(resolve => setTimeout(resolve, 250));
+                    console.log("Adding frame " + f + ", " + addedToGif.length);
+                    ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, height);
+                    //ctx.drawImage(icon, 5, canvas.height - (canvas.height / 8) - 5, canvas.width/8, canvas.height/8);
+
+                    ctx.font = "65px Arial";
+                    ctx.fillStyle = "white";
+                    ctx.fillText(`📐 ${req.body.hit_angle}° | 💨 ${req.body.hit_speed} MPH | 📏 ${req.body.distance}'`, 15, canvas.height - 25);
+
+                    let iconAspect = icon.width / icon.height;
+                    //10/50 = 0.2
+                    ctx.drawImage(icon, canvas.width - ((canvas.width / 7) * iconAspect) - 15, height - (height / 7) - 15, (canvas.width / 7) * iconAspect, height / 7);
+                    encoder.addFrame(ctx);
+
+                    addedToGif.push(f.substring(3, 6));
+                }
+                if (addedToGif.length >= 32 && !uploadingGif) {
+                    console.log(i + ", " + counter);
+                    encoder.finish();
+                    console.log("Finishing gif...");
+                    hashtag += " . ";
+                    automateUpload(req, hashtag);
+                }
+            });
         }
     });
 }
@@ -237,27 +283,31 @@ app.get("/test_auto", function (req, res) {
 
 
 // Automate mouse movement for upload
-async function automateUpload(hrNumber, des, hashtag, distance, id, wasHomerun, team_fielding) {
+async function automateUpload(req, hashtag) {
+    uploadingGif = true;
+
+    robot.keyTap("escape");
+    robot.keyTap("escape");
     imageID--;
     console.log("AUTO");
     let outputText = "";
 
-    if(wasHomerun == "false" || !JSON.parse(wasHomerun)) {
-        if(hrNumber == 29) {
-            outputText = "🚨🚨UNICORN OUT🚨🚨" + "\n" + distance + "'. Home run at " + hrNumber + " stadiums: " + des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + id;
+    if (req.body.homerun == "false" || !JSON.parse(req.body.homerun)) {
+        if (req.body.numBallparks == 29) {
+            outputText = "🚨🚨UNICORN OUT🚨🚨" + "\n" + req.body.distance + "'. Hit at " + req.body.home_team + ". Home run at " + req.body.numBallparks + " stadium: " + req.body.des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + req.body.playId;
         } else {
-            outputText = distance + "'. Home run at " + hrNumber + " stadiums: " + des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + id;
+            outputText = req.body.distance + "'. Hit at " + req.body.home_team + ".  Home run at " + req.body.numBallparks + " stadiums: " + req.body.des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + req.body.playId;
         }
     } else {
-        if(hrNumber == 1) {
-            outputText = "🚨🚨UNICORN HOME RUN🚨🚨" + "\n" + distance + "'. Home run at " + hrNumber + " stadiums: " + des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + id;
-        } else if(hrNumber == 30){
-            outputText = distance + "'. No doubter, home run at all 30 stadiums: " + des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + id;
+        if (req.body.numBallparks == 1) {
+            outputText = "🚨🚨UNICORN HOME RUN🚨🚨" + "\n" + req.body.distance + "'. Hit at " + req.body.home_team + ".  Home run at " + req.body.numBallparks + " stadium: " + req.body.des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + req.body.playId;
+        } else if (req.body.numBallparks == 30) {
+            outputText = req.body.distance + "'. Hit at " + req.body.home_team + ".  No doubter, home run at all 30 stadiums: " + req.body.des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + req.body.playId;
         } else {
-            outputText = distance + "'. Home run at " + hrNumber + " stadiums: " + des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + id;
+            outputText = req.body.distance + "'. Hit at " + req.body.home_team + ".  Home run at " + req.body.numBallparks + " stadiums: " + req.body.des + " " + hashtag + "Watch a video here: " + "https://baseballsavant.mlb.com/sporty-videos?playId=" + req.body.playId;
         }
 
-        if(team_fielding == "NYM") {
+        if (req.body.team_fielding == "NYM") {
             outputText = "@NjTank99 " + outputText;
         }
     }
@@ -303,10 +353,10 @@ async function automateUpload(hrNumber, des, hashtag, distance, id, wasHomerun, 
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Type
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < 9; i++) {
         robot.keyTap("tab");
         await new Promise(resolve => setTimeout(resolve, 750));
-    }   
+    }
 
     robot.keyToggle("control", "down", []);
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -314,7 +364,7 @@ async function automateUpload(hrNumber, des, hashtag, distance, id, wasHomerun, 
     await new Promise(resolve => setTimeout(resolve, 100));
     robot.keyToggle("control", "up", []);
 
-    // 9 for gif, 16 for video
+    // 9 for gif, 16 for video (+2 for drafts)
     await new Promise(resolve => setTimeout(resolve, 3000));
     for (var i = 0; i < 9; i++) {
         robot.keyTap("tab");
@@ -322,7 +372,24 @@ async function automateUpload(hrNumber, des, hashtag, distance, id, wasHomerun, 
     }
     robot.keyTap("enter");
 
+    // Drafts time
+    /*await new Promise(resolve => setTimeout(resolve, 3000));
+    for (var i = 0; i < 4; i++) {
+        robot.keyTap("tab");
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    robot.keyTap("enter");
+
+    await new Promise(resolve => setTimeout(resolve, 5500));
+    for (var i = 0; i < 16; i++) {
+        robot.keyTap("tab");
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    robot.keyTap("enter");*/
+
     await (500);
+
+    uploadingGif = false;
     //gitPush();
 }
 
@@ -409,18 +476,18 @@ const sleep = (milliseconds) => {
 }
 
 const imageFolder1 = './images1';
-    const imageFolder2 = './images2';
-    const outputFolder = './output';
+const imageFolder2 = './images2';
+const outputFolder = './output';
 
-    try {
-        fsExtra.emptyDirSync(imageFolder1);
-        fsExtra.emptyDirSync(imageFolder2);
-    } catch (e) {
-        console.error("Error emptying image folder", e);
-    }
+try {
+    fsExtra.emptyDirSync(imageFolder1);
+    fsExtra.emptyDirSync(imageFolder2);
+} catch (e) {
+    console.error("Error emptying image folder", e);
+}
 
-    try {
-        fsExtra.emptyDirSync(outputFolder);
-    } catch (e) {
-        console.error("Error emptying output folder", e);
-    }
+try {
+    fsExtra.emptyDirSync(outputFolder);
+} catch (e) {
+    console.error("Error emptying output folder", e);
+}
